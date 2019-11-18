@@ -275,8 +275,6 @@ def find_center(marker):
 
 # ANA ALGORİTMA BAŞLANGICI
 camera = cv2.VideoCapture(0)
-camera.set(3, 800)
-camera.set(4, 720)
 while True:
     _, frame = camera.read()
     frame = cv2.GaussianBlur(frame, (3,3), 0)
