@@ -46,9 +46,10 @@ class params:
     maxAreaRate = 4
     minCornerDisRate = 2.5
     minMarkerDisRate = 1
-    resizeRate = 3
-    cellMarginRate = 0.1
+    resizeRate = 4
+    cellMarginRate = 0.13
     monoDetection = True
+
 
 #çok ağır çalışıyor + tam çalışmıyor (bu fonksiyondan vazgeçilebilir)
 def remove_close_candidates(candidates):
@@ -175,9 +176,8 @@ def validate_candidates(candidates, frame):
                 break
             validMarker = np.rot90(validMarker)
 
-        bitimg = recreate_img(bits)
-        cv2.imshow("bits", bitimg)
-        # gösterim amaçlı
+        #bitimg = recreate_img(bits)
+        #cv2.imshow("bits", bitimg)
         #cv2.imshow("otsu", candidate_img)
     return markers
 
@@ -208,6 +208,8 @@ def resize_img(inputImg):
 
 
 def extract_bits(img):
+    img = resize_img(img)
+
     # artag boyutları şimdilik fonksiyon içinde tanımlı
     # ileride belli bir parametreye bağlanacak
     markerSize = 5
@@ -221,12 +223,15 @@ def extract_bits(img):
     inner_rg = img[borderSize*cellHeight:(markerSizeWithBorders-borderSize)*cellHeight,
                borderSize*cellWidth:(markerSizeWithBorders-borderSize)*cellWidth]
 
+    marginX = int(cellWidth * params.cellMarginRate)
+    marginY = int(cellHeight * params.cellMarginRate)
+
     # her bit için
     for j in range(markerSize):
         Ystart = j * cellHeight
         for i in range(markerSize):
             Xstart = i * cellWidth
-            bitImg = inner_rg[Ystart:Ystart+cellHeight, Xstart:Xstart+cellWidth]
+            bitImg = inner_rg[Ystart+marginY:Ystart+cellHeight-marginY, Xstart+marginX:Xstart+cellWidth-marginX]
             if np.count_nonzero(bitImg) / bitImg.size > 0.5:
                 bitmap[j][i] = 1
 
@@ -270,6 +275,8 @@ def find_center(marker):
 
 # ANA ALGORİTMA BAŞLANGICI
 camera = cv2.VideoCapture(0)
+camera.set(3, 800)
+camera.set(4, 720)
 while True:
     _, frame = camera.read()
     frame = cv2.GaussianBlur(frame, (3,3), 0)
