@@ -26,14 +26,71 @@ class tags:
         [1, 1, 1, 1, 1, 1, 1]
     ],dtype=int)
 
-    # mid
-    realSample = np.array([
-        [1, 1, 0, 1, 1],
-        [1, 1, 0, 1, 1],
-        [1, 0, 1, 0, 1],
-        [0, 1, 1, 1, 0],
-        [0, 1, 1, 1, 0],
-    ], dtype=int)
+    valids = [
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 0],
+            [1, 0, 1, 1, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 1, 0],
+            [1, 1, 1, 0, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 1, 1, 1, 1],
+            [1, 0, 1, 0, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1],
+            [0, 1, 1, 0, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 1, 1, 1, 0],
+            [0, 1, 1, 1, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 1, 1],
+            [0, 0, 1, 1, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+            [0, 0, 1, 0, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+        ], dtype=int),
+    ]
 
 
 class params:
@@ -169,12 +226,14 @@ def validate_candidates(candidates, frame):
 
         bits = extract_bits(candidate_img)
         bits = np.transpose(bits)
-        validMarker = tags.realSample.copy()
-        for i in range(4):
-            if np.array_equal(bits, validMarker):
-                markers.append(can)
-                break
-            validMarker = np.rot90(validMarker)
+
+        for valid in tags.valids:
+            validMarker = valid.copy()
+            for i in range(4):
+                if np.array_equal(bits, validMarker):
+                    markers.append(can)
+                    break
+                validMarker = np.rot90(validMarker)
 
         #bitimg = recreate_img(bits)
         #cv2.imshow("bits", bitimg)
@@ -292,7 +351,7 @@ while True:
         markers = validate_candidates(candidates, gray)
         #center = find_center(candidates[0])
         #cv2.circle(frame, center, 5, (0, 0, 255), -1)
-        cv2.drawContours(frame, candidates, -1, (0, 255, 0), 2)
+        #cv2.drawContours(frame, candidates, -1, (0, 255, 0), 2)
 
         if len(markers) > 0:
             cv2.drawContours(frame, markers, -1, (255, 0, 0), 3)
