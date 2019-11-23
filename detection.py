@@ -6,10 +6,14 @@ import numpy as np
 KODA BAKMADAN ÖNCE
 
 Yeşil ile gösterilen adaylrdır(candidates) adayların resimde gösterilmesini isterseniz
-satır 362'deki kodu aktive edebilirsiniz
+satır 369'deki kodu aktive edebilirsiniz
 
 Mavi ile gösterilenler ise onaylanmış adaylardır(markers)
-bunların gösterilmesini istemezseniz satır 364 deki if yapısından kurtulabilirsiniz                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+bunların gösterilmesini istemezseniz satır 371 deki if yapısından kurtulabilirsiniz                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+Bu kod 5x5 lik kodları algılamak için tasarlanmıştır tags isimli sınıfta "valids" isimli listede
+kabul edilen her artag'in iç kodları tanımlanmışır. İsterseniz yeni kodlar ekleyebilirsiniz
+tanımlanmıştır.
 
 *PARAMETRELER
 params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
@@ -18,13 +22,16 @@ params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
 
 -minAreaRate belirlenen adayların sahip olması gereken en küçük alanın hesaplanmasında kullanılır
 bunu azaltmanız daha küçük adaylar görmenizi sağlar
--maxAreaRate minAreaRate parametresine benzer ama ters etkine neden olur
+-maxAreaRate minAreaRate parametresine benzer ama ters etkiye neden olur
 
 -resizeRate bu parammetrenin artırılması belli bir noktaya kadar algoritma kesinliğini arttırır lakin 
 işlem gücü harcamasına neden olur
 
 -cellMarginRate her bie bakarken onun tamamına değil de biraz daha içine bakarız. Bu parametre yüzde kaç içine
 bakmamız gerekiğini belirler
+
+-markerSizeInBits & borderSizeInBits Artag'in sınırlarının ve iç kodunun bit boyutu yazılmıştır lakin bunun
+değiştirilmesi tavsiye edinilmez çünkü tanımlı bütün artaglar bu iki parametreye göre tanımlı.
 """
 
 
