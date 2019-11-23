@@ -1,18 +1,31 @@
 import cv2
 import numpy as np
 
-# satır 964
-# satır 601  510  eb411
 
-'''
-Yapılacaklar 
+"""
+KODA BAKMADAN ÖNCE
 
-köşe dizmeyi düzelt
-adayları onayla
-çoklu ve tekli tespit etme modlarını uyarla 
-sonuçları ros üzerinden yayınla
+Yeşil ile gösterilen adaylrdır(candidates) adayların resimde gösterilmesini isterseniz
+satır 362'deki kodu aktive edebilirsiniz
 
-'''
+Mavi ile gösterilenler ise onaylanmış adaylardır(markers)
+bunların gösterilmesini istemezseniz satır 364 deki if yapısından kurtulabilirsiniz                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+*PARAMETRELER
+params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
+-threshConstant ile oynanabilir
+-threshWinSize parametleri ile oynanabilir ama tek sayı olmasına dikkat ediniz
+
+-minAreaRate belirlenen adayların sahip olması gereken en küçük alanın hesaplanmasında kullanılır
+bunu azaltmanız daha küçük adaylar görmenizi sağlar
+-maxAreaRate minAreaRate parametresine benzer ama ters etkine neden olur
+
+-resizeRate bu parammetrenin artırılması belli bir noktaya kadar algoritma kesinliğini arttırır lakin 
+işlem gücü harcamasına neden olur
+
+-cellMarginRate her bie bakarken onun tamamına değil de biraz daha içine bakarız. Bu parametre yüzde kaç içine
+bakmamız gerekiğini belirler
+"""
 
 
 class tags:
@@ -94,7 +107,7 @@ class tags:
 
 
 class params:
-    threshConsant = 7
+    threshConstant = 7
     threshWinSizeMax = 23
     threshWinSizeMin = 3
     threshWinSizeStep = 10
@@ -105,6 +118,8 @@ class params:
     minMarkerDisRate = 1
     resizeRate = 4
     cellMarginRate = 0.13
+    markerSizeInBits = 5
+    borderSizeInBits = 2
     monoDetection = True
 
 
@@ -172,13 +187,6 @@ def sort_corners(corners):
 
    if crossproduct > 0:
        corners[1], corners[3] = corners[3], corners[1]
-
-    # deneme amaçlıdırlar (m y k
-  # global frame
-  # cv2.circle(frame, tuple(corners[0]), 2, (255, 0, 0), 3)    # mavi
-  # cv2.circle(frame, tuple(corners[1]), 2, (255, 255, 0), 3)  # sarı
-  # cv2.circle(frame, tuple(corners[2]), 2, (255, 0, 255), 3)  # mor
-  # cv2.circle(frame, tuple(corners[3]), 2, (0, 255, 255), 5)  # turkuaz
 
 
 def get_corners(candidate):
@@ -271,8 +279,8 @@ def extract_bits(img):
 
     # artag boyutları şimdilik fonksiyon içinde tanımlı
     # ileride belli bir parametreye bağlanacak
-    markerSize = 5
-    borderSize = 2
+    markerSize = params.markerSizeInBits
+    borderSize = params.borderSizeInBits
 
     markerSizeWithBorders = markerSize + 2 * borderSize
     bitmap = np.zeros((markerSize, markerSize), dtype=int)
@@ -298,7 +306,7 @@ def extract_bits(img):
 
 
 def detect_candidates(grayImg):
-    th = cv2.adaptiveThreshold(grayImg, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 9, params.threshConsant)
+    th = cv2.adaptiveThreshold(grayImg, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 9, params.threshConstant)
     cnts = cv2.findContours(th, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[-2]
 
     cv2.imshow('th', th)
