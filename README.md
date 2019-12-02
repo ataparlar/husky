@@ -1,9 +1,10 @@
+/*
 Artık kamera kalibrasyon dosyamız var bu sebeple gerekli json dosyamızı kodunuz ile aynı klasörde bulundurmanız gereklidir
 eğer değilse kod içinde params içindeki configFilePath adlı parametreyi ayarlamalısınız
 
 Aşağıdaki duyuru kodun üst kısmında da vardır, lakin buraya koymakta da yarar olduğunu düşünüyorum
 """
-KODA BAKMADAN ÖNCE
+**KODA BAKMADAN ÖNCE**
 
 Yeşil ile gösterilenler adaylardır 
 Mavi ile gösterilenler ise onaylanmış adaylardır(markers)                                                                                                            
@@ -32,3 +33,4 @@ params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
 """
 
 kullanılan paketler: json - opencv - numpy
+*/
