@@ -1,5 +1,5 @@
 Artık kamera kalibrasyon dosyamız var bu sebeple gerekli json dosyamızı kodunuz ile aynı klasörde bulundurmanız gereklidir
-eğer değilse kod içinde params içinde configFilePath adlı parametreyi ayarlamalısınız
+eğer değilse kod içinde params içindeki configFilePath adlı parametreyi ayarlamalısınız
 
 Aşağıdaki duyuru kodun üst kısmında da vardır, lakin buraya koymakta da yarar olduğunu düşünüyorum
 """
