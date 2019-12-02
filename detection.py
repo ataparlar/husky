@@ -1,50 +1,39 @@
 import cv2
 import numpy as np
+import json
 
 
 """
 KODA BAKMADAN ÖNCE
 
-Yeşil ile gösterilen adaylrdır(candidates) adayların resimde gösterilmesini isterseniz
-satır 369'deki kodu aktive edebilirsiniz
-
-Mavi ile gösterilenler ise onaylanmış adaylardır(markers)
-bunların gösterilmesini istemezseniz satır 371 deki if yapısından kurtulabilirsiniz                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-
+Yeşil ile gösterilenler adaylardır 
+Mavi ile gösterilenler ise onaylanmış adaylardır(markers)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 Bu kod 5x5 lik kodları algılamak için tasarlanmıştır tags isimli sınıfta "valids" isimli listede
 kabul edilen her artag'in iç kodları tanımlanmışır. İsterseniz yeni kodlar ekleyebilirsiniz.
 
 *PARAMETRELER
 params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
--threshConstant ile oynanabilir
--threshWinSize parametleri ile oynanabilir ama tek sayı olmasına dikkat ediniz
 
--minAreaRate belirlenen adayların sahip olması gereken en küçük alanın hesaplanmasında kullanılır
-bunu azaltmanız daha küçük adaylar görmenizi sağlar
--maxAreaRate minAreaRate parametresine benzer ama ters etkiye neden olur
+-threshConstant: eşiklemenin hassasiyeti ile oynar ne kadar düşük o kadar hassaslaşır
+-threshWinSize: parametleri ile oynanabilir ama tek sayı olmasına dikkat ediniz
+-minAreaRate: belirlenen adayların sahip olması gereken en küçük alanın hesaplanmasında kullanılır
+              bunu azaltmanız daha küçük adaylar görmenizi sağlar
+-maxAreaRate: minAreaRate parametresine benzer ama ters etkiye neden olur
+-resizeRate: bu parammetrenin artırılması belli bir noktaya kadar algoritma kesinliğini arttırır lakin 
+             işlem gücü harcamasına neden olur
+-cellMarginRate: her bite bakarken onun tamamına değil de biraz daha içine bakarız. Bu parametre her hücrenin 
+                 yüzde kaç içine bakmamız gerekiğini belirler
+-markerSizeInBits & borderSizeInBits: Artag'in sınırlarının ve iç kodunun bit boyutu yazılmıştır lakin bunun
+                                      değiştirilmesi tavsiye edinilmez çünkü tanımlı bütün artaglar bu iki 
+                                      parametreye göre tanımlı.
+-configFileName: kamera kalibrasyon dosyasının bulunduğu konum(eğer aynı klasörde ise ismi yetiyor
+-undistortImg: kamera kalibrasyonu hala deneme aşamasında oluğu için isterseniz undistortion işlemini engelleyebilirsiniz
+-showCandidate showMarkers: showTresholded bu üçü isminden de anlaşıacağı üzere istediğiniz şeyleri kapatıp açabilirsiniz
 
--resizeRate bu parammetrenin artırılması belli bir noktaya kadar algoritma kesinliğini arttırır lakin 
-işlem gücü harcamasına neden olur
-
--cellMarginRate her bie bakarken onun tamamına değil de biraz daha içine bakarız. Bu parametre yüzde kaç içine
-bakmamız gerekiğini belirler
-
--markerSizeInBits & borderSizeInBits Artag'in sınırlarının ve iç kodunun bit boyutu yazılmıştır lakin bunun
-değiştirilmesi tavsiye edinilmez çünkü tanımlı bütün artaglar bu iki parametreye göre tanımlı.
 """
 
 
 class tags:
-    sample = np.array([
-        [1, 1, 1, 0, 0, 0, 1],
-        [1, 1, 0, 1, 0, 0, 0],
-        [1, 0, 0, 1, 0, 0, 0],
-        [1, 0, 1, 0, 1, 0, 1],
-        [0, 0, 0, 0, 1, 1, 1],
-        [1, 1, 1, 0, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1]
-    ],dtype=int)
-
     valids = [
         np.array([
             [1, 1, 0, 1, 1],
@@ -113,23 +102,35 @@ class tags:
 
 
 class params:
-    threshConstant = 7
+    threshConstant = 3
     threshWinSizeMax = 23
     threshWinSizeMin = 3
     threshWinSizeStep = 10
     accuracyRate = 0.02
     minAreaRate = 0.03
-    maxAreaRate = 4
+    maxAreaRate = 6
     minCornerDisRate = 2.5
     minMarkerDisRate = 1
     resizeRate = 4
     cellMarginRate = 0.13
     markerSizeInBits = 5
     borderSizeInBits = 2
-    monoDetection = True
+    configFileName = 'logi-g922-config.json'
+    undistortImg = True
+    showCandidate = True
+    showMarkers = True
+    showTresholded = True
 
 
-#çok ağır çalışıyor + tam çalışmıyor (bu fonksiyondan vazgeçilebilir)
+def load_camera_params(filename='default.json'):
+    with open(filename, 'r') as loadFile:
+        data = json.load(loadFile)
+        mtx = np.array(data['mtx'])
+        dist = np.array(data['dist'])
+    return mtx, dist
+
+
+# çok ağır çalışıyor + tam çalışmıyor (bu fonksiyondan vazgeçilebilir)
 def remove_close_candidates(candidates):
     newCandidates = list()
 
@@ -315,7 +316,8 @@ def detect_candidates(grayImg):
     th = cv2.adaptiveThreshold(grayImg, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 9, params.threshConstant)
     cnts = cv2.findContours(th, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[-2]
 
-    cv2.imshow('th', th)
+    if params.showTresholded is True:
+        cv2.imshow('treshold', th)
 
     # ayıklama
     candidates = list()
@@ -347,27 +349,29 @@ def find_center(marker):
 
 
 # ANA ALGORİTMA BAŞLANGICI
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(1)
+mtx, dist = load_camera_params(filename=params.configFileName)
+
 while True:
     _, frame = camera.read()
     frame = cv2.GaussianBlur(frame, (3,3), 0)
+
+    # kamera kalibrasyonu hala deneme aşamasında
+    if params.undistortImg is True:
+        frame = cv2.undistort(frame, mtx, dist)
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     candidates = detect_candidates(gray)
 
     if len(candidates) > 0:
         #candidates = remove_close_candidates(candidates)
-
-        #if params.monoDetection is True and len(candidates) > 1:
-            #biggest = max(candidates, key=cv2.contourArea)
-            #candidates[0] = biggest
-
         markers = validate_candidates(candidates, gray)
-        #center = find_center(candidates[0])
-        #cv2.circle(frame, center, 5, (0, 0, 255), -1)
-        #cv2.drawContours(frame, candidates, -1, (0, 255, 0), 2)
 
-        if len(markers) > 0:
+        if params.showCandidate is True:
+            cv2.drawContours(frame, candidates, -1, (0, 255, 0), 2)
+
+        if len(markers) > 0 and params.showMarkers is True:
             cv2.drawContours(frame, markers, -1, (255, 0, 0), 3)
 
     cv2.imshow('frame', frame)
