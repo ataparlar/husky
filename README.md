@@ -27,3 +27,6 @@ params klasörü hemen hemen bütün parametrelerin depolandığı yerdir
 
 kullanılan paketler: json - opencv - numpy
 
+ros için topic
+ "px_coordinates"
+ node "rover_detect_artag"
