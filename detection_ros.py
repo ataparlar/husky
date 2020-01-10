@@ -8,29 +8,100 @@ from timeit import default_timer as timer
 
 
 class tags:
-    sample = np.array([
-        [1,1,1,0,0,0,1],
-        [1,1,0,1,0,0,0],
-        [1,0,0,1,0,0,0],
-        [1,0,1,0,1,0,1],
-        [0,0,0,0,1,1,1],
-        [1,1,1,0,1,1,1],
-        [1,1,1,1,1,1,1]
-    ],dtype=int)
+    valids = [
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 0],
+            [1, 0, 1, 1, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 1, 0],
+            [1, 1, 1, 0, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 1, 1, 1, 1],
+            [1, 0, 1, 0, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1],
+            [0, 1, 1, 0, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 1, 1, 1, 0],
+            [0, 1, 1, 1, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 1, 1],
+            [0, 0, 1, 1, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+            [0, 0, 1, 0, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+        ], dtype=int),
+    ]
 
 
 class params:
-    threshConsant = 7
+    threshConstant = 7
     threshWinSizeMax = 23
     threshWinSizeMin = 3
     threshWinSizeStep = 10
     accuracyRate = 0.02
     minAreaRate = 0.03
-    maxAreaRate = 4
+    maxAreaRate = 6
     minCornerDisRate = 2.5
     minMarkerDisRate = 1
-    resizeRate = 3
-    monoDetection = True
+    resizeRate = 4
+    cellMarginRate = 0.13
+    markerSizeInBits = 5
+    borderSizeInBits = 2
+    configFileName = 'logi-g922-config.json'
+    undistortImg = False
+    showCandidate = True
+    showMarkers = True
+    showTresholded = True
+
+
+def load_camera_params(filename='default.json'):
+    with open(filename, 'r') as loadFile:
+        data = json.load(loadFile)
+        mtx = np.array(data['mtx'])
+        dist = np.array(data['dist'])
+    return mtx, dist
 
 
 def remove_close_candidates(candidates):
@@ -90,19 +161,8 @@ def sort_corners(corners):
 
    crossproduct = (dx1 * dy2) - (dy1 * dx2)
 
-   if crossproduct < 0:
+   if crossproduct > 0:
        corners[1], corners[3] = corners[3], corners[1]
-
-
-   global frame
-   cv2.circle(frame, tuple(corners[0]), 2, (255, 0, 0), 3)    # mavi
-   cv2.circle(frame, tuple(corners[1]), 2, (255, 255, 0), 3)  # sari
-   cv2.circle(frame, tuple(corners[2]), 2, (255, 0, 255), 3)  # mor
-   cv2.circle(frame, tuple(corners[3]), 2, (0, 255, 255), 5)  # turkuaz
-
-   print(len(corners))
-
-   return corners
 
 
 def get_corners(candidate):
@@ -117,7 +177,7 @@ def get_corners(candidate):
 
 def get_candate_img(candidate, frame):
     corners = get_corners(candidate)
-    #corners = sort_corners(corners)
+    sort_corners(corners)
 
     (tl, tr, br, bl) = corners
     widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
@@ -149,17 +209,16 @@ def validate_candidates(candidates, frame):
         ret, candidate_img = cv2.threshold(candidate_img, 125, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
         bits = extract_bits(candidate_img)
-        validMarker = tags.sample.copy()
+        bits = np.transpose(bits)
 
-        for i in range(4):
-            if np.array_equal(bits, validMarker):
-                markers.append(can)
-                break
-            validMarker = np.rot90(validMarker)
+        for valid in tags.valids:
+            validMarker = valid.copy()
+            for i in range(4):
+                if np.array_equal(bits, validMarker):
+                    markers.append(can)
+                    break
+                validMarker = np.rot90(validMarker)
 
-        #bitimg = recreate_img(bits)
-        #cv2.imshow("bits", bitimg)
-        #cv2.imshow("otsu", candidate_img)
     return markers
 
 
@@ -180,9 +239,18 @@ def recreate_img(bits):
     return img
 
 
+def resize_img(inputImg):
+    w = int(inputImg.shape[1]*params.resizeRate)
+    h = int(inputImg.shape[0]*params.resizeRate)
+    outputImg = cv2.resize(inputImg, (w,h))
+    return outputImg
+
+
 def extract_bits(img):
-    markerSize = 7
-    borderSize = 2
+    img = resize_img(img)
+
+    markerSize = params.markerSizeInBits
+    borderSize = params.borderSizeInBits
 
     markerSizeWithBorders = markerSize + 2 * borderSize
     bitmap = np.zeros((markerSize, markerSize), dtype=int)
@@ -191,14 +259,15 @@ def extract_bits(img):
 
     inner_rg = img[borderSize*cellHeight:(markerSizeWithBorders-borderSize)*cellHeight,
                borderSize*cellWidth:(markerSizeWithBorders-borderSize)*cellWidth]
-    cv2.imshow('adad', inner_rg)
+
+    marginX = int(cellWidth * params.cellMarginRate)
+    marginY = int(cellHeight * params.cellMarginRate)
 
     for j in range(markerSize):
         Ystart = j * cellHeight
         for i in range(markerSize):
             Xstart = i * cellWidth
-            bitImg = inner_rg[Ystart:Ystart+cellHeight, Xstart:Xstart+cellWidth]
-
+            bitImg = inner_rg[Ystart+marginY:Ystart+cellHeight-marginY, Xstart+marginX:Xstart+cellWidth-marginX]
             if np.count_nonzero(bitImg) / bitImg.size > 0.5:
                 bitmap[j][i] = 1
 
@@ -206,10 +275,11 @@ def extract_bits(img):
 
 
 def detect_candidates(grayImg):
-    th = cv2.adaptiveThreshold(grayImg, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 9, params.threshConsant)
+    th = cv2.adaptiveThreshold(grayImg, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 9, params.threshConstant)
     cnts = cv2.findContours(th, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[-2]
 
-    cv2.imshow('th', th)
+    if params.showTresholded is True:
+        cv2.imshow('treshold', th)
 
     candidates = list()
     for c in cnts:
@@ -234,43 +304,47 @@ def find_center(marker):
     (x, y), r = cv2.minEnclosingCircle(marker)
     return int(x), int(y), int(r)
 
-rospy.init_node('rover_detect_artag')
-camera = cv2.VideoCapture(1)
-#camera.set(3, 1280)
-#camera.set(4, 720)
 
+rospy.init_node('rover_detect_artag')
 coordinatePublisher = rospy.Publisher("/px_coordinates", String, queue_size = 1)
+
+camera = cv2.VideoCapture(0)
+mtx = None
+dist = None
+
+if params.undistortImg is True:
+    mtx, dist = load_camera_params(filename=params.configFileName)
 
 while not rospy.is_shutdown():
     _, frame = camera.read()
     frame = cv2.GaussianBlur(frame, (3,3), 0)
+
+    if params.undistortImg is True:
+        frame = cv2.undistort(frame, mtx, dist)
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     candidates = detect_candidates(gray)
 
+    # this piece of code is messy a bit
+    # TODO: optimize it
     if len(candidates) > 0:
-        candidates = remove_close_candidates(candidates)
-
-        #if params.monoDetection is True and len(candidates) > 1:
-            #biggest = max(candidates, key=cv2.contourArea)
-            #candidates[0] = biggest
-
         markers = validate_candidates(candidates, gray)
-        #center = find_center(candidates[0])
-        #cv2.circle(frame, center, 5, (0, 0, 255), -1)
-        cv2.drawContours(frame, candidates, -1, (0, 255, 0), 1)
 
-        if len(markers) > 0:
+        if params.showCandidate is True:
+            cv2.drawContours(frame, candidates, -1, (0, 255, 0), 2)
+
+        if len(markers) > 0 and params.showMarkers is True:
             cv2.drawContours(frame, markers, -1, (255, 0, 0), 3)
 
-        w = frame.shape[1]
-        h = frame.shape[0]
-        x,y,r = find_center(candidates[0])
-        coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
+        if len(markers) > 0:
+            w = frame.shape[1]
+            h = frame.shape[0]
+            x,y,r = find_center(markers[0])
+            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
     else:
         coordinatePublisher.publish("-")
 
-
     cv2.imshow('frame', frame)
-    if cv2.waitKey(10) == 27: 
+    if cv2.waitKey(10) == 27:  
         break
