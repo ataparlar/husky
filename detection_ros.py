@@ -4,106 +4,75 @@ import cv2
 import numpy as np
 import rospy
 from std_msgs.msg import String
-#from timeit import default_timer as timer
+from timeit import default_timer as timer
 
 
 class tags:
-    valids = {
-        "1":np.array([
+    valids = [
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 0],
+            [1, 0, 1, 1, 0],
+        ], dtype=int),
+        np.array([
             [1, 1, 0, 1, 1],
             [1, 1, 0, 1, 1],
             [1, 0, 1, 0, 1],
             [1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1],
         ], dtype=int),
-
-        "2":np.array([
+        np.array([
             [1, 1, 0, 1, 1],
             [1, 1, 0, 1, 1],
             [1, 0, 1, 0, 1],
             [0, 0, 1, 1, 0],
             [1, 1, 1, 0, 1],
         ], dtype=int),
-
-        "3":np.array([
+        np.array([
             [1, 1, 0, 1, 1],
             [1, 1, 0, 1, 1],
             [1, 0, 1, 0, 1],
-            [1, 0, 1, 1, 0],
-            [1, 0, 1, 1, 0],
+            [0, 1, 1, 1, 1],
+            [1, 0, 1, 0, 0],
         ], dtype=int),
-
-        "4": {
-            "l":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [0, 1, 1, 1, 1],
-                [1, 0, 1, 0, 0],
-            ], dtype=int),
-
-            "r":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [0, 1, 1, 1, 0],
-                [0, 1, 1, 1, 0],
-            ], dtype=int),
-        },
-
-        "5": {
-            "l":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 0, 1, 1, 1],
-                [0, 1, 1, 0, 0],
-            ], dtype=int),
-            "r":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [0, 0, 1, 1, 1],
-                [0, 0, 1, 1, 1],
-            ], dtype=int),
-        },
-
-        "6":{
-            "l":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 1, 1, 1, 0],
-                [0, 0, 1, 0, 1],
-            ], dtype=int),
-
-            "r":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [0, 0, 1, 0, 1],
-                [1, 1, 1, 1, 0],
-            ], dtype=int),
-        }
-
-        "7":{
-            "l":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 1, 1, 0, 0],
-                [1, 1, 1, 0, 0],
-            ], dtype=int),
-
-            "r":np.array([
-                [1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1],
-                [1, 0, 1, 0, 1],
-                [0, 1, 1, 0, 0],
-                [1, 0, 1, 1, 1],
-            ], dtype=int),
-        }
-    }
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1],
+            [0, 1, 1, 0, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 1, 1, 1, 0],
+            [0, 1, 1, 1, 0],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 1, 1],
+            [0, 0, 1, 1, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+            [0, 0, 1, 0, 1],
+        ], dtype=int),
+        np.array([
+            [1, 1, 0, 1, 1],
+            [1, 1, 0, 1, 1],
+            [1, 0, 1, 0, 1],
+            [0, 0, 1, 0, 1],
+            [1, 1, 1, 1, 0],
+        ], dtype=int),
+    ]
 
 
 class params:
@@ -114,9 +83,9 @@ class params:
     accuracyRate = 0.02
     minAreaRate = 0.03
     maxAreaRate = 6
-    minCornerDisRate = 1.5
+    minCornerDisRate = 2.5
     minMarkerDisRate = 1
-    resizeRate = 8
+    resizeRate = 4
     cellMarginRate = 0.13
     markerSizeInBits = 5
     borderSizeInBits = 2
@@ -125,7 +94,6 @@ class params:
     showCandidate = True
     showMarkers = True
     showTresholded = True
-    correctedBits = 4
 
 
 def load_camera_params(filename='default.json'):
@@ -236,46 +204,20 @@ def get_candate_img(candidate, frame):
 
 def validate_candidates(candidates, frame):
     markers = list()
-    bestCan = None       # LEFT
-    bestCan1 = None      # RIGHT
-    lowestError = params.markerSizeInBits * params.markerSizeInBits
-    lowestError1 = params.markerSizeInBits * params.markerSizeInBits
-
     for can in candidates:
         candidate_img = get_candate_img(can, frame)
-        candidate_img = resize_img(candidate_img)
-
-        #cv2.imshow("wdew", candidate_img)
-        ret, candidate_img = cv2.threshold(candidate_img, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        #cv2.imshow("wdeaw", candidate_img)
+        ret, candidate_img = cv2.threshold(candidate_img, 125, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
         bits = extract_bits(candidate_img)
         bits = np.transpose(bits)
 
-        rospy.Subscriber('/stage', String, stage_callback)
-
-        if int(stage) <= 3:
-            validMarker = tags.valids[stage]
-            wrongBits = np.count_nonzero(np.subtract(bits,validMarker))
-            if  wrongBits <= params.correctedBits and wrongBits < lowestError:
-                bestCan = can
-                lowestError = wrongBits
-        else:
-            validMarkerLeft = tags.valids[stage]["l"]
-            validMarkerRight = tags.valids[stage]["r"]
-
-            wrongBits = np.count_nonzero(np.subtract(bits,validMarkerLeft))
-            wrongBits1 = np.count_nonzero(np.subtract(bits,validMarkerRight))
-
-            if wrongBits < lowestError and wrongBits <= params.correctedBits:
-                bestCan = can
-            if wrongBits1 < lowestError1 and wrongBits1 <= params.correctedBits:
-                bestCan1 = can
-
-    if bestCan != None:
-        markers.append(bestCan)
-    if bestCan1 != None:
-        markers.append(bestCan)
+        for valid in tags.valids:
+            validMarker = valid.copy()
+            for i in range(4):
+                if np.array_equal(bits, validMarker):
+                    markers.append(can)
+                    break
+                validMarker = np.rot90(validMarker)
 
     return markers
 
@@ -305,6 +247,8 @@ def resize_img(inputImg):
 
 
 def extract_bits(img):
+    img = resize_img(img)
+
     markerSize = params.markerSizeInBits
     borderSize = params.borderSizeInBits
 
@@ -361,17 +305,9 @@ def find_center(marker):
     return int(x), int(y), int(r)
 
 
-def stage_callback(msg):
-    stage = msg.data
-
-
-
 rospy.init_node('rover_detect_artag')
 coordinatePublisher = rospy.Publisher("/px_coordinates", String, queue_size = 1)
-coordinatePublisher1 = rospy.Publisher("/px_coordinates1", String, queue_size = 1)
-sidePublisher = rospy.Publisher("/is_behind", String, queue_size = 1)
 
-stage = "1"
 camera = cv2.VideoCapture(1)
 mtx = None
 dist = None
@@ -381,6 +317,7 @@ if params.undistortImg is True:
 
 while not rospy.is_shutdown():
     _, frame = camera.read()
+    frame = cv2.GaussianBlur(frame, (3,3), 0)
 
     if params.undistortImg is True:
         frame = cv2.undistort(frame, mtx, dist)
@@ -399,29 +336,15 @@ while not rospy.is_shutdown():
 
         if len(markers) > 0 and params.showMarkers is True:
             cv2.drawContours(frame, markers, -1, (255, 0, 0), 3)
-        else:
-            coordinatePublisher.publish("-")
-            coordinatePublisher1.publish("-")
-            sidePublisher.publish("-")
-            continue
 
-        if len(markers) > 2:
+        if len(markers) > 0:
             w = frame.shape[1]
             h = frame.shape[0]
             x,y,r = find_center(markers[0])
             coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
-            x1,y,r = find_center(markers[1])
-            coordinatePublisher1.publish(str(x1) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
-
-            if x1 < x:
-                sidePublisher.publish("1")
-            else:
-                sidePublisher.publish("0")
     else:
         coordinatePublisher.publish("-")
-        coordinatePublisher1.publish("-")
-        sidePublisher.publish("-")
 
     cv2.imshow('frame', frame)
-    if cv2.waitKey(10) == 27:
+    if cv2.waitKey(10) == 27:  
         break
