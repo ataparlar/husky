@@ -8,6 +8,10 @@ import json
 from std_msgs.msg import String
 
 
+def find_center(marker):
+    (x, y), r = cv2.minEnclosingCircle(marker)
+    return int(x), int(y), int(r)
+
 def load_camera_params(filename='/home/berkealgul/rover_20_ws/src/rover_20/rover_20_image/src/logi-g922-config.json'):
     with open(filename, 'r') as loadFile:
         data = json.load(loadFile)
@@ -36,23 +40,21 @@ def main(mtx, dist):
                 #rvec, tvec, markerPoints = aruco.estimatePoseSingleMarkers(corners[i], 0.02, mtx, dist)
                 #(rvec - tvec).any()  # get rid of that nasty numpy value array error
                 aruco.drawDetectedMarkers(frame, corners)
-                #aruco.drawAxis(frame, mtx, dist, rvec, tvec, 0.01)  # Draw Axis
-        else:
-            coordinatePublisher.Publish('-')
+                #aruco.drawAxis(frame, mtx, dist, rvec, tvec, 0.01)  
 
         if len(ids) == 2:
             w = frame.shape[1]
             h = frame.shape[0]
             x,y,r = find_center(corners[0])
-            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
             
             x,y,r = find_center(markers[1])
-            coordinatePublisher1.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+            coordinatePublisher1.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h) +"," + str(r))
          elif len(ids) == 1:
             w = frame.shape[1]
             h = frame.shape[0]
             x,y,r = find_center(corners[0])
-            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h) + "," + str(r))
          else:
             coordinatePublisher.Publish('-')
             coordinatePublisher1.Publish('-')
