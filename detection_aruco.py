@@ -37,9 +37,25 @@ def main(mtx, dist):
                 #(rvec - tvec).any()  # get rid of that nasty numpy value array error
                 aruco.drawDetectedMarkers(frame, corners)
                 #aruco.drawAxis(frame, mtx, dist, rvec, tvec, 0.01)  # Draw Axis
-                coordinatePublisher.Publish('found')
         else:
             coordinatePublisher.Publish('-')
+
+        if len(ids) == 2:
+            w = frame.shape[1]
+            h = frame.shape[0]
+            x,y,r = find_center(corners[0])
+            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+            
+            x,y,r = find_center(markers[1])
+            coordinatePublisher1.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+         elif len(ids) == 1:
+            w = frame.shape[1]
+            h = frame.shape[0]
+            x,y,r = find_center(corners[0])
+            coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h))
+         else:
+            coordinatePublisher.Publish('-')
+            coordinatePublisher1.Publish('-')
 
         cv2.imshow('frame', frame)
 
@@ -54,4 +70,5 @@ rospy.init_node('rover_detect_aruco')
 
 mtx, dis = load_camera_params()
 coordinatePublisher = rospy.Publisher('/px_coordinates', String, queue_size = 1)
+coordinatePublisher1 = rospy.Publisher('/px_coordinates1', String, queue_size = 1)
 main(mtx, dist)
