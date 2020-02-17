@@ -130,17 +130,27 @@ def load_camera_params(filename='/home/berkealgul/rover_20_ws/src/rover_20/rover
 def stage_callback(data):
     global stage, leftId , rightId
     stage = int(data.data)
+    
+    if stage < 4:
+        leftId = stage  # We got single artagr rather than a gate we still use leftId as our artag
+        rightId = -1    # Since there is no gate in bellow stage 3, right id is not valid
+    else:
+        leftId = (stage - 4) * 2 + 3    # when there is a gate we use this formula to find our ids
+        rightId = leftId + 1
 
 
 def main(mtx, dist):
     cap = cv2.VideoCapture(0)
 
+    # ID 1 had changed for test purposes. TODO:Must fix before URC
     aruco_dict = get_dictionary()
     parameters = aruco.DetectorParameters_create()
     parameters.markerBorderBits = 2  
 
     while not rospy.is_shutdown():
         rospy.Subscribe('/stage_counter_topic', String, stage_callback)
+        
+        print("L: " + str(leftId) + " R: " + print(rightId))
 
         ret, frame = cap.read()
 
@@ -164,7 +174,7 @@ def main(mtx, dist):
             x,y,r = find_center(corners[0])
             coordinatePublisher.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h)+ "," + str(r))
             
-            x,y,r = find_center(markers[1])
+            x,y,r = find_center(corners[1])
             coordinatePublisher1.publish(str(x) +","+ str(y) + "," + str(w) + "," + str(h) +"," + str(r))
          elif len(ids) == 1:
             w = frame.shape[1]
@@ -195,7 +205,7 @@ rightId = 0
 mtx, dis = load_camera_params()
 coordinatePublisher = rospy.Publisher('/px_coordinates', String, queue_size = 1)
 coordinatePublisher1 = rospy.Publisher('/px_coordinates1', String, queue_size = 1)
-dir_pub = rospiy.Publisher('/artag_direction', String, queue_size = 1)
+dir_pub = rospy.Publisher('/artag_direction', String, queue_size = 1)
 
 
 main(mtx, dist)
