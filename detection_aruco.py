@@ -8,6 +8,114 @@ import json
 from std_msgs.msg import String
 
 
+def get_dictionary():
+    aruco_dict = aruco.custom_dictionary(0, 5, 1)
+    aruco_dict.bytesList = np.empty(shape=(11, 4, 4), dtype=np.uint8)
+
+    # LEG 1
+    mybits = np.array([
+        [1, 1, 1, 1, 1],
+        [1, 1, 0, 0, 1],
+        [1, 1, 1, 1, 1],
+        [0, 0, 1, 0, 1],
+        [0, 0, 1, 0, 1]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[0] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    # LEG 2
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 0, 1, 1, 0],
+        [1, 1, 1, 0, 1]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[1] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    # LEG 3
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 0],
+        [1, 0, 1, 1, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[2] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    # LEG 4
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 1, 1, 1, 1],
+        [1, 0, 1, 0, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[3] = aruco.Dictionary_getByteListFromBits(mybits)
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[4] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    # LEG 5
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1],
+        [0, 1, 1, 0, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[5] = aruco.Dictionary_getByteListFromBits(mybits)
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 0, 1, 1, 1],
+        [0, 0, 1, 1, 1]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[6] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    # LEG 6
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [1, 1, 1, 1, 0],
+        [0, 0, 1, 0, 1]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[7] = aruco.Dictionary_getByteListFromBits(mybits)
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 0, 1, 0, 1],
+        [1, 1, 1, 1, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[8] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    #  LEG 7
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [1, 1, 1, 0, 0],
+        [1, 1, 1, 0, 0]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[9] = aruco.Dictionary_getByteListFromBits(mybits)
+    mybits = np.array([
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1],
+        [0, 1, 1, 0, 0],
+        [1, 0, 1, 1, 1]
+    ], dtype=np.uint8)
+    aruco_dict.bytesList[10] = aruco.Dictionary_getByteListFromBits(mybits)
+
+    return aruco_dict
+
 def find_center(marker):
     (x, y), r = cv2.minEnclosingCircle(marker)
     return int(x), int(y), int(r)
@@ -19,28 +127,36 @@ def load_camera_params(filename='/home/berkealgul/rover_20_ws/src/rover_20/rover
         dist = np.array(data['dist'])
     return mtx, dist
 
+def stage_callback(data):
+    global stage, leftId , rightId
+    stage = int(data.data)
+
+
 def main(mtx, dist):
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
+
+    aruco_dict = get_dictionary()
+    parameters = aruco.DetectorParameters_create()
+    parameters.markerBorderBits = 2  
 
     while not rospy.is_shutdown():
+        rospy.Subscribe('/stage_counter_topic', String, stage_callback)
+
         ret, frame = cap.read()
-        # operations on the frame come here
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Change grayscale
-        aruco_dict = aruco.Dictionary_get(aruco.DICT_5X5_250)  # Use 5x5 dictionary to find markers
-        parameters = aruco.DetectorParameters_create()  # Marker detection parameters
-        # lists of ids and the corners beloning to each id
+
         corners, ids, rejected_img_points = aruco.detectMarkers(gray, aruco_dict,
                                                                 parameters=parameters,
                                                                 cameraMatrix=mtx,
                                                                 distCoeff=dist)
 
         if np.all(ids is not None):  # If there are markers found by detector
-            for i in range(0, len(ids)):  # Iterate in markers
+            for i in range(0, len(ids)):
+                print(ids[i])
                 # Estimate pose of each marker and return the values rvec and tvec---different from camera coefficients
-                #rvec, tvec, markerPoints = aruco.estimatePoseSingleMarkers(corners[i], 0.02, mtx, dist)
-                #(rvec - tvec).any()  # get rid of that nasty numpy value array error
-                aruco.drawDetectedMarkers(frame, corners)
-                #aruco.drawAxis(frame, mtx, dist, rvec, tvec, 0.01)  
+                rvec, tvec, markerPoints = aruco.estimatePoseSingleMarkers(corners[i], 0.02, mtx, dist)
+                (rvec - tvec).any()  # get rid of that nasty numpy value array error
+                aruco.drawAxis(frame, mtx, dist, rvec, tvec, 0.01)  
+            aruco.drawDetectedMarkers(frame, corners)
 
         if len(ids) == 2:
             w = frame.shape[1]
@@ -60,6 +176,7 @@ def main(mtx, dist):
             coordinatePublisher1.Publish('-')
 
         cv2.imshow('frame', frame)
+        dir_pub.Publish("1")
 
         key = cv2.waitKey(3) & 0xFF
         if key == ord('q'):  # Quit
@@ -68,9 +185,17 @@ def main(mtx, dist):
     cap.release()
     cv2.destroyAllWindows()
 
-rospy.init_node('rover_detect_aruco')
+
+rospy.init_node('rover_detect_artag')
+
+stage = "1"
+leftId = 0
+rightId = 0
 
 mtx, dis = load_camera_params()
 coordinatePublisher = rospy.Publisher('/px_coordinates', String, queue_size = 1)
 coordinatePublisher1 = rospy.Publisher('/px_coordinates1', String, queue_size = 1)
+dir_pub = rospiy.Publisher('/artag_direction', String, queue_size = 1)
+
+
 main(mtx, dist)
