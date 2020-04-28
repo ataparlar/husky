@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <style>
+
+.bg-container{
+    background-image: url("{{ bg.img.url }}");
+    background-size: cover;
+    background-attachment: fixed;
+    height: 55vh;
+    width: 100%;
+}
+    </style>
+{% endblock %}
+
+{% block content %}
+
+     <br><br>
+
+    <div class="bg-container d-flex">
+        <div class="logo justify-content-center align-self-center w-100 text-center">
+            <div class="container col-lg-7 col-md-12">
+                    <img class="col-3" src="{% static 'img/logo.png' %}">
+                <br><br><br><br><br>
+                    <div class="container-fluid text-center display-3 font-weight-normal">
+                        <p>ETKİNLİKLERİMİZ</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-md-12">
+                {% for etk in etks %}
+                    <div class="row p-4">
+                        <div class="col-5 justify-content-center align-self-center">
+                            <a href="/etkinliklerimiz/{{ etk.id }}"><img class="w-100" src="{{ etk.img.url }}" alt=""></a>
+                        </div>
+                        <div class="col-7 justify-content-center align-self-center">
+                            <a href="/etkinliklerimiz/{{ etk.id }}"><h1 class="font-weight-normal">{{ etk.title }}</h1></a>
+                            <p>{{ etk.small_text }}</p>
+                            <div class="text-right">
+                                {{ etk.date }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-3 font-weight-normal text-center">
+                <br>
+                <div>
+                    <h1>ARŞİV</h1>
+                    <hr>
+                </div>
+                {% for etk in etks %}
+                    <div class="mt-4">
+                        <a href="etkinliklerimiz/{{ etk.id }}">
+                            <div>{{ etk.title }}</div>
+                            <div>{{ etk.date }}</div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

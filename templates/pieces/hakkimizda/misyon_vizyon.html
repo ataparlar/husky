@@ -1,0 +1,5 @@
+{% load static %}
+
+    {% for misyon_vizyon in misyon_vizyons %}
+        {% include 'pieces/post.html' with post=misyon_vizyon %}
+    {% endfor %}

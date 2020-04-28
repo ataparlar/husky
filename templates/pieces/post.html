@@ -1,0 +1,57 @@
+{% load static %}
+
+{% if post.img %}
+
+    {% if post.query|divisibleby:2 == 1 %}  <!--  FOTOĞRAF SOLDA  -->
+
+        <br>
+
+        <div class="container-fluid" style="height: 80vh">
+            <div class="container col-md-8 col-sm-12 h-60">
+                <div class="row">
+                    <div class="font-weight-normal col-md-6 col-sm-12 p-5 justify-content-center align-self-center">
+                        <div class="m-2 display-4 text-center">{{ post.title }}</div>
+                        <div class="text-center">
+                            <div>{{ post.text | safe }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 p-5 text-center">
+                            <img class="shadow" src="{{ post.img.url }}" alt="" style="width: 70%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% elif post.query|divisibleby:2 == 0 %}  <!--  FOTOĞRAF SAĞDA  -->
+
+        <br>
+
+        <div class="container-fluid" style="height: 80vh">
+            <div class="container col-md-8 col-sm-12 h-60">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 p-5 text-center">
+                        <img class="shadow" src="{{ post.img.url }}" style="width: 70%;">
+                    </div>
+                    <div class="font-weight-normal col-md-6 col-sm-12 p-5 justify-content-center align-self-center">
+                        <h1 class="m-2 display-4 text-center">{{ post.title }}</h1>
+                        <div class="text-center">
+                            {{ post.text | safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% else %}
+
+    <div class="container">
+        <div class="text-center">
+            {{ post.text | safe }}
+        </div>
+    </div>
+    <br>
+    <hr>
+
+{% endif %}

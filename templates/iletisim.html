@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <style>
+
+.bg-container{
+    background-image: url("{{ bg.img.url }}");
+    background-size: cover;
+    background-attachment: fixed;
+    height: 55vh;
+    width: 100%;
+}
+.mapouter{
+    position:relative;
+    text-align:right;
+    height:500px;
+    width:100%;
+}
+.gmap_canvas {
+    overflow:hidden;
+    background:none!important;
+    height:500px;
+    width:100%;
+}
+    </style>
+{% endblock %}
+
+{% block content %}
+
+     <br><br>
+
+    <div class="bg-container d-flex">
+        <div class="logo justify-content-center align-self-center w-100 text-center">
+            <div class="container col-lg-7 col-md-12">
+                    <img class="col-3" src="{% static 'img/logo.png' %}">
+                <br><br><br><br><br>
+                    <div class="container-fluid text-center display-3 font-weight-normal">
+                        <p>İLETİŞİM</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+<div class="for-shadow">
+    <br>
+    <div class="container col-lg-7 col-md-12">
+        <div class="row">
+            <div class="col-3 text-right">
+                <i class="fas fa-home display-4"></i>
+            </div>
+            <div class="col-9">
+                <h3 class="font-weight-normal">İTÜ Ayazağa Yerleşkesi İnşaat Fakültesi Şarık Tara Öğrenci Merkezi Maslak/İstanbul</h3>
+            </div>
+        </div>
+
+
+
+        <h3 class="font-weight-normal text-center">jfk@itu.edu.tr</h3>
+
+        <h3 class="font-weight-normal text-center">itujfk@gmail.com</h3>
+
+        <br><br>
+
+        <div class="mapouter">
+            <div class="gmap_canvas">
+                <iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=%C4%B0T%C3%9C%20Ayaza%C4%9Fa%20Yerle%C5%9Fkesi%20%C4%B0n%C5%9Faat%20Fak%C3%BCltesi&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                <a href="https://www.embedgooglemap.net"></a>
+            </div>
+        </div>
+    </div>
+</div>
+    <br><br>
+
+
+
+{% endblock %}
+

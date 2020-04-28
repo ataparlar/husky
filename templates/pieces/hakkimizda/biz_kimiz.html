@@ -1,0 +1,5 @@
+{% load static %}
+
+    {% for biz_kimiz in biz_kimizs %}
+        {% include 'pieces/post.html' with post=biz_kimiz %}
+    {% endfor %}

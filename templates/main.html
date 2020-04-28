@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <style>
+
+.bg-container{
+    background-image: url("{{ bg.img.url }}");
+    background-size: cover;
+    background-attachment: fixed;
+    height: 70vh;
+    width: 100%;
+}
+    </style>
+{% endblock %}
+    
+{% block content %}
+
+    <br><br>
+
+    <div class="bg-container d-flex">
+        <div class="logo justify-content-center align-self-center w-100 text-center">
+            <div class="container col-lg-7 col-md-12">
+                <div class="row">
+                    <img class="col-4" src="{% static 'img/logo.png' %}">
+                    <div class="text-center display-4 font-weight-normal col-8">
+                        <p>İTÜ</p>
+                        <p>JEODEZİ VE FOTOGRAMETRİ</p>
+                        <p>KULÜBÜ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% for post in posts %}
+        {% include 'pieces/post.html' %}
+    {% endfor %}
+
+
+<!--
+    <div class="jumbotron bg-gray col-12">
+        <div class="container col-xl-8 col-md-12 col-sm-10 col-xs-12">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-xs-12 text-center">
+                    <h3 class="pb-2">HİZMETLERİMİZ</h3>
+                    <a href="#"><h5>2. El Satış</h5></a>
+                    <a href="#"><h5>Monitör Tamiri</h5></a>
+                    <a href="#"><h5>Yazıcı Tamiri</h5></a>
+                    <a href="#"><h5>Notebook Tamiri</h5></a>
+                    <a href="#"><h5>Notebook Tamiri</h5></a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-xs-12 text-center">
+                    <h3 class="pb-2">KURUMSAL</h3>
+                    <a href="#"><h5>Misyon</h5></a>
+                    <a href="#"><h5>Vizyon</h5></a>
+                    <a href="#"><h5>Basında Biz</h5></a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-xs-12 text-center">
+                    <h3 class="pb-2">ÇALIŞMA SİSTEMİMİZ</h3>
+                </div>
+                <div class="col-lg-3 col-md-6 col-xs-12 text-center">
+                    <a href="#"><h3 class="pb-2">İLETİŞİM</h3></a>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
+
+
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+{% endblock %}
