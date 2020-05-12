@@ -3,14 +3,6 @@
 
 {% block css %}
     <style>
-
-.bg-container{
-    background-image: url("{{ bg.img.url }}");
-    background-size: cover;
-    background-attachment: fixed;
-    height: 55vh;
-    width: 100%;
-}
 .mapouter{
     position:relative;
     text-align:right;
@@ -28,22 +20,29 @@
 
 {% block content %}
 
-     <br><br>
 
-    <div class="bg-container d-flex">
-        <div class="logo justify-content-center align-self-center w-100 text-center">
-            <div class="container col-lg-7 col-md-12">
-                    <img class="col-3" src="{% static 'img/logo.png' %}">
-                <br><br><br><br><br>
-                    <div class="container-fluid text-center display-3 font-weight-normal">
-                        <p>İLETİŞİM</p>
-                    </div>
-            </div>
-        </div>
-    </div>
-
-<div class="for-shadow">
     <br>
+    <div class="container col-lg-6 col-md-12">
+                <div class="jumbotron text-center py-3">
+                    <h2><i class="fas fa-phone"></i>  0212 210 44 22</h2>
+                    <h2><i class="fas fa-phone"></i>  0212 220 84 18</h2>
+                    <h2><i class="fas fa-phone"></i>  0212 210 35 97</h2>
+                </div>
+                <div class="jumbotron text-center py-3">
+                    <div class="container col-10">
+                        <div class="row">
+                            <div class="col-2 justify-content-center align-self-center">
+                                <h2><i class="fas fa-home"></i></h2>
+                            </div>
+                            <div class="col-10">
+                                <h3>Perpa Ticaret Merkezi A Blok Kat:11 No:1681-1679-1677 Okmeydanı - Şişli/İstanbul</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <!--
     <div class="container col-lg-7 col-md-12">
         <div class="row">
             <div class="col-3 text-right">
@@ -59,7 +58,7 @@
         <h3 class="font-weight-normal text-center">jfk@itu.edu.tr</h3>
 
         <h3 class="font-weight-normal text-center">itujfk@gmail.com</h3>
-
+-->
         <br><br>
 
         <div class="mapouter">
@@ -69,7 +68,7 @@
             </div>
         </div>
     </div>
-</div>
+
     <br><br>
 
 

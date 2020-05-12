@@ -1,47 +1,42 @@
 {% load static %}
-<!--
-    <div class="bg-container">
-        <div class="container col-xl-10 col-lg-10 col-md-12 d-flex h-100">
-            <div class="row text-center justify-content-center align-self-center w-100">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <img class="col-xl-7 col-lg-7 mt-2" src="{% static 'img/logo1.png' %}">
-                </div>
-                <div class="col-6">
-                    <h1 style="color: #9e0325; font-size: 26pt" class="font-weight-normal text-dark">26 Yıldır</h1>
-                    <h1 style="color: #9e0325; font-size: 26pt" class="font-weight-normal text-dark">Güvenle</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-   -->
+<style>
+    .navbarr{
+        border-bottom: 5px solid #ECAB2B;
+    }
+    nav ul li:hover{
+        background-color: #ECAB2B;
+    }
+</style>
 
-    <nav class="navbar-dark navbar navbar-expand-md bg-light fixed-top">
-        <div class="container col-lg-6 col-md-12">
-            <a class="navbar-brand logo-nav" href="/"><img src="{% static 'img/logo.png' %}" style="height: 45px" alt=""></a>
+    <nav class="navbar-light navbar navbar-expand-md bg-light fixed-top py-0" >
+        <div class="container col-lg-6 col-md-12" style="height: 100%;">
+            <a class="navbar-brand logo-nav" href="/"><img src="{% static 'img/logo.png' %}" style="height: 55px" alt=""></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#links">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse font-weight-bold" id="links" style="font-size: 14pt;">
+            <div class="collapse navbar-collapse font-weight-bold" id="links" style="font-size: 14pt; height: 100%;">
                 <ul class="navbar-nav w-100 display-flex justify-content-between font-weight-normal">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/">Ana Sayfa</a>
+                        <a class="nav-link" href="/">Ana Sayfa</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbardrop" data-toggle="dropdown">Hakkımızda</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Hakkımızda</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/hakkimizda/biz_kimiz">Biz Kimiz?</a>
                             <a class="dropdown-item" href="/hakkimizda/misyon_vizyon">Misyon-Vizyon</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/etkinliklerimiz">Etkinliklerimiz</a>
+                        <a class="nav-link" href="/etkinliklerimiz">Etkinliklerimiz</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/iletisim">İletişim</a>
+                        <a class="nav-link" href="/iletisim">İletişim</a>
                     </li>
+                    <!--
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="#">Sosyal</a>
+                        <a class="nav-link" href="#">Sosyal</a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>

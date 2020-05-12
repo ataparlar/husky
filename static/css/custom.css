@@ -1,0 +1,90 @@
+body{
+    background-color: #F8F9FA;
+}
+.bg-container{
+    background-size: cover;
+    background-attachment: fixed;
+    height: 55vh;
+    width: 100%;
+}
+.navbar{
+    border-bottom: 5px solid #ECAB2B;
+}
+nav ul li:hover{
+    background-color: #ECAB2B;
+}
+.logo-nav{
+    display: none;
+}
+.mapouter{
+    position:relative;
+    text-align:right;
+    height:500px;
+    width:100%;
+}
+.gmap_canvas {
+    overflow:hidden;
+    background:none!important;
+    height:500px;
+    width:100%;
+}
+.font-thin {
+    font-weight: 300;
+}
+.font-medium{
+    font-weight: 450;
+}
+.font-thick {
+    font-weight: 600;
+}
+.text-big {
+    font-size: 55px;
+}
+
+.text-medium {
+    font-size: 36px;
+}
+.font-default-color {
+    color: #666666 !important;
+}
+
+.font-primary-color {
+    color: #444444 !important;
+}
+
+.text-orange{
+    color: #ECAB2B;
+}
+.bg-orange{
+    background-color: #ECAB2B;
+}
+a{
+    color: black;
+}
+a:hover{
+    color: #CC8400
+}
+
+@media only screen and (max-width: 1200px) {
+    .bg-container{
+        height: 65vh;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .main_logo{
+        width: 60%;
+    }
+    .logo-nav {
+        display: block;
+    }
+    .text-big {
+        font-size: 48px;
+    }
+    .text-medium{
+        font-size: 24pt;
+    }
+    .bg-container{
+        height: 55vh;
+    }
+}

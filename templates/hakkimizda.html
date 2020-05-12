@@ -2,33 +2,9 @@
 {% load static %}
 
 {% block css %}
-    <style>
-
-.bg-container{
-    background-image: url("{{ bg.img.url }}");
-    background-size: cover;
-    background-attachment: fixed;
-    height: 55vh;
-    width: 100%;
-}
-    </style>
 {% endblock %}
 
 {% block content %}
-
-     <br><br>
-
-    <div class="bg-container d-flex">
-        <div class="logo justify-content-center align-self-center w-100 text-center">
-            <div class="container col-lg-7 col-md-12">
-                    <img class="col-3" src="{% static 'img/logo.png' %}">
-                <br><br><br><br><br>
-                    <div class="container-fluid text-center display-3 font-weight-normal">
-                        <p>HAKKIMIZDA</p>
-                    </div>
-            </div>
-        </div>
-    </div>
 
     {% for key, value in urls.items %}
         <div id="{{ key }}">

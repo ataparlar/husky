@@ -68,9 +68,9 @@ class KayanFotograf(models.Model):
 
 
 class ArkaPlanFotograf(models.Model):
-    bg_name = models.CharField(
+    bg_name = RichTextField(
         max_length=120,
-        verbose_name="Doldurun",
+        verbose_name="Arka planın önünde yazacak yazı:",
         default="a"
     )
     img = models.ImageField(

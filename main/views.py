@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -53,11 +54,18 @@ def about_view(request):
 
 
 def etkinlik_list_view(request):
-    etkinlik_post = Post.objects.filter(page=Sayfa.objects.all()[4]).order_by('-date')
+    post = Post.objects.filter(page=Sayfa.objects.all()[4]).order_by('-date')
     etkinlik_bg = ArkaPlanFotograf.objects.get(page=Sayfa.objects.all()[4])
+
+    # pagination
+    paginator = Paginator(post, 3)
+    sayfa = request.GET.get("sayfa")
+    etkinlik_post = paginator.get_page(sayfa)
+
     etkinlik_dict = {
         "etks": etkinlik_post,
         "bg": etkinlik_bg,
+        "etks_all": post  # for archive
     }
     return render(request, 'etkinliklerimiz.html', etkinlik_dict)
 

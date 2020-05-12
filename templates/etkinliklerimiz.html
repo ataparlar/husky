@@ -3,50 +3,62 @@
 
 {% block css %}
     <style>
-
-.bg-container{
-    background-image: url("{{ bg.img.url }}");
-    background-size: cover;
-    background-attachment: fixed;
-    height: 55vh;
-    width: 100%;
-}
+    .page-item{
+        background-color: #ECAB2B;
+    }
     </style>
 {% endblock %}
 
 {% block content %}
-
-     <br><br>
-
-    <div class="bg-container d-flex">
-        <div class="logo justify-content-center align-self-center w-100 text-center">
-            <div class="container col-lg-7 col-md-12">
-                    <img class="col-3" src="{% static 'img/logo.png' %}">
-                <br><br><br><br><br>
-                    <div class="container-fluid text-center display-3 font-weight-normal">
-                        <p>ETKİNLİKLERİMİZ</p>
-                    </div>
-            </div>
-        </div>
-    </div>
-
+    <br>
     <div class="container">
         <div class="row">
             <div class="col-lg-9 col-md-12">
                 {% for etk in etks %}
                     <div class="row p-4">
-                        <div class="col-5 justify-content-center align-self-center">
-                            <a href="/etkinliklerimiz/{{ etk.id }}"><img class="w-100" src="{{ etk.img.url }}" alt=""></a>
+                        <div class="col-lg-6 col-md-12 justify-content-center align-self-center">
+                            <img class="w-100" src="{{ etk.img.url }}" alt="">
                         </div>
-                        <div class="col-7 justify-content-center align-self-center">
+                        <div class="col-lg-6 col-md-12 justify-content-center align-self-center">
                             <a href="/etkinliklerimiz/{{ etk.id }}"><h1 class="font-weight-normal">{{ etk.title }}</h1></a>
                             <p>{{ etk.small_text }}</p>
-                            <div class="text-right">
-                                {{ etk.date }}
+                            <div class="row">
+                                <div class="col-8">
+                                    {{ etk.date }}
+                                </div>
+                                <div class="col-4 text-center" >
+                                    <a href="/etkinliklerimiz/{{ etk.id }}"><h6 class="bg-orange text-dark shadow" style="padding: 3px 25px;">İncele</h6></a>
+                                </div>
                             </div>
+                            <hr>
                         </div>
                     </div>
                 {% endfor %}
+                <div class="container">
+                    <ul class="pagination justify-content-center">
+
+                        {% if etks.has_previous %}
+                            <li class="page-item"><a href="?sayfa={{ etks.previous_page_number }}" class="page-link bg-orange text-dark">Önceki Sayfa</a></li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link bg-orange text-dark" href="#"><span>&laquo;</span></a></li>
+                        {% endif %}
+
+                        {% for page in etks.paginator.page_range %}
+                            {% if page_numbers.number == page %}
+                                <li class="page-item active"><a class="page-link bg-orange text-dark" href="#">{{ page }} <span class="sr-only">{{ page }}</span></a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link bg-orange text-dark" href="?sayfa={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if etks.has_next %}
+                            <li class="page-item"><a href="?sayfa={{ etks.next_page_number }}" class="page-link bg-orange text-dark">Sonraki Sayfa</a></li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link bg-orange text-dark" href="#"><span>&raquo;</span></a></li>
+                        {% endif %}
+
+                    </ul>
+                </div>
             </div>
             <div class="col-lg-3 font-weight-normal text-center">
                 <br>
@@ -54,7 +66,7 @@
                     <h1>ARŞİV</h1>
                     <hr>
                 </div>
-                {% for etk in etks %}
+                {% for etk in etks_all %}
                     <div class="mt-4">
                         <a href="etkinliklerimiz/{{ etk.id }}">
                             <div>{{ etk.title }}</div>

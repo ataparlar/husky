@@ -1,0 +1,27 @@
+{% load static %}
+
+<br><br>
+
+    <div class="bg-container d-flex" style="background-image: url('{{ bg.img.url }}');">
+        <div class="logo justify-content-center align-self-center w-100 text-center">
+            <div class="container col-lg-7 col-md-12 mt-5">
+                {% if request.path == '/' %}
+                    <div class="row">
+                        <div class="container col-xl-4 col-lg-6 col-md-12 py-4">
+                            <img class="col-lg-12 col-md-4 main_logo" src="{% static 'img/logo.png' %}">
+                        </div>
+                        <div class="text-center text-big font-weight-normal col-xl-8 col-lg-12 my-auto text-orange" style="text-shadow: 1px 1px 3px black;">
+                            <p style="margin: 0; padding: 0;">İTÜ</p>
+                            <p style="margin: 0; padding: 0;">JEODEZİ VE FOTOGRAMETRİ</p>
+                            <p style="margin: 0; padding: 0;">KULÜBÜ</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <img class="col-xl-4 col-lg-8 col-md-4 main_logo my-5" src="{% static 'img/logo.png' %}">
+                    <div class="container-fluid text-center font-weight-normal bg-light">
+                        <h1 class="text-big font-medium py-3">{{ bg.bg_name | safe }}</h1>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
