@@ -24,11 +24,22 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/hakkimizda/biz_kimiz">Biz Kimiz?</a>
                             <a class="dropdown-item" href="/hakkimizda/misyon_vizyon">Misyon-Vizyon</a>
+                            <a class="dropdown-item" href="/hakkimizda/kurul">Yönetim Kurulumuz</a>
                         </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/etkinliklerimiz">Etkinliklerimiz</a>
                     </li>
+                    {% if oldyears %}
+                        <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Geçmişimiz</a>
+                            <div class="dropdown-menu">
+                                {% for oldyear in oldyears %}
+                                <a class="dropdown-item" href="{% url 'oldyear' year=oldyear.year %}">{{ oldyear.year }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="/iletisim">İletişim</a>
                     </li>

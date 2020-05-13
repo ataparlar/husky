@@ -1,0 +1,61 @@
+<div class="container col-xl-9 col-md-12">
+    <br>
+    {% if danisman %}
+
+        <div class="row">
+            <div class="col-xl-4 col-md-12 text-center mx-auto danisman">
+                <div class="font-thin text-center" style="font-size: 32pt">Kulüp Danışmanı</div>
+                    <div class="my-auto justify-content-center">
+                        <div class="my-2 col-xl-8 col-md-12 mx-auto img-container">
+                            <img class="rounded" src="{{ danisman.get_photo_url }}">
+                        </div>
+                        <div class="text-center col-12">
+                            <div style="font-size: 20pt;">{{ danisman.get_unvan_full_name }}</div>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-xl-8 col-md-12 text-center mx-auto">
+                <div class="font-thin text-center" style="font-size: 32pt">Kulübün Yönetim Kurulu</div>
+                    <div class="row justify-content-center">
+                        {% for member in members %}
+                            <div class="my-3 mx-2 p-2 col-xl-3 col-md-12">
+                                <div class="my-2 img-container">
+                                    <img class="rounded" src="{{ member.get_photo_url }}">
+                                </div>
+                                <div class="text-center">
+                                    <div style="font-size: 20pt;">{{ member.get_full_name }}</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-thin" style="font-size: 16pt;">{{ member.role }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+            </div>
+        </div>
+
+    {% else %}
+
+        <div class="col-8 text-center mx-auto">
+            <div class="row">
+                {% for member in members %}
+                    <div class="my-3 mx-2 p-2 col-xl-3 col-md-12 shadow">
+                        <div class="my-2 col-12 img-container">
+                            <img class="rounded" src="{{ member.get_photo_url }}">
+                        </div>
+                        <div class="text-center col-12">
+                            <div style="font-size: 20pt;">{{ member.get_full_name }}</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="font-thin" style="font-size: 16pt;">{{ member.role }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+</div>
